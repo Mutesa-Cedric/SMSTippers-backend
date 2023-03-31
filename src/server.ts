@@ -15,7 +15,14 @@ import rentalsRouter from "./modules/rentals/rentalsRouter";
 const PORT = process.env.PORT || 3000;
 
 const app = express();
-dbConnection();
+dbConnection().then(() => {
+    console.log("Database connected");
+    app.listen(PORT, () => {
+        console.log(`Server is listening on port ${PORT}`);
+    });
+}).catch((err) => {
+    console.log(err);
+});
 
 app.use(bodyParser.json())
 app.use(cookieParser());
@@ -34,7 +41,3 @@ app.get("/", (req, res) => {
     res.send("hello smstippers");
 });
 
-
-app.listen(PORT, () => {
-    console.log(`Server is listening on port ${PORT}`);
-}); 
