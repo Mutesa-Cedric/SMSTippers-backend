@@ -1,8 +1,7 @@
 import mongoose = require("mongoose");
 
-const dbUrl_dev = process.env.MONGOURL_DEV as string;
-const dbUrl_prod = process.env.MONGOURL_PROD as string;
-const dbUrl = process.env.NODE_ENV === "development" ? dbUrl_dev : dbUrl_prod;
+
+const dbUrl = process.env.MONGOURL as string;
 
 export const dbConnection = async () => {
     // try {
