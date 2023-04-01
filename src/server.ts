@@ -30,7 +30,7 @@ app.use(cookieParser());
 // cors (accept localhost:3000,https://smstippers-v2.vercel.app)
 
 app.use((req, res, next) => {
-    res.setHeader("Access-Control-Allow-Origin", ["http://localhost:3000", "https://smstippers-v2.vercel.app"]);
+    res.setHeader("Access-Control-Allow-Origin", req.headers.origin ? req.headers.origin : "http://localhost:3000");
     res.setHeader("Access-Control-Allow-Credentials", "true");
     res.setHeader("Access-Control-Allow-Methods", "GET,HEAD,OPTIONS,POST,PUT,DELETE");
     res.setHeader("Access-Control-Allow-Headers", "Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers, Authorization");
