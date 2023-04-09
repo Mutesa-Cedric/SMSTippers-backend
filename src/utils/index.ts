@@ -7,3 +7,7 @@ export const generateApiKey = (): string => {
 export const generatePromoCode = (): string => {
     return Math.random().toString(36).substring(2, 8)
 };
+
+export const generateTicketId = (): string => {
+    return Math.random().toString(36).substring(2, 8)
+}

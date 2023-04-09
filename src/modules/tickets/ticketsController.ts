@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import Ticket from "./ticketModel";
+import { generateTicketId } from "../../utils";
 
 export const getTickets = async (req: Request, res: Response) => {
     try {
@@ -37,10 +38,21 @@ export const createTicket = async (req: Request, res: Response) => {
         if (!title || !description || !status || !userId) {
             return res.status(400).json({ message: "missing required fields." });
         }
+
+        let ticketId = generateTicketId();
+
+        // check if ticketId already exists
+
+        const existingTicket = await Ticket.find({ ticket_id: ticketId });
+        while (existingTicket.length > 0) {
+            ticketId = generateTicketId();
+        }
+
         const ticket = await Ticket.create({
             title,
             description,
             status,
+            ticket_id: ticketId,
             createdBy: userId
         });
         res.status(201).json({

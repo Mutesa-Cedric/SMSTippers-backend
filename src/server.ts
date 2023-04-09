@@ -27,8 +27,6 @@ dbConnection().then(() => {
 app.use(bodyParser.json())
 app.use(cookieParser());
 
-// cors (accept localhost:3000,https://smstippers-v2.vercel.app)
-
 app.use((req, res, next) => {
     res.setHeader("Access-Control-Allow-Origin", req.headers.origin ? req.headers.origin : "http://localhost:3000");
     res.setHeader("Access-Control-Allow-Credentials", "true");

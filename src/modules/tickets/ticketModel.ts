@@ -1,6 +1,11 @@
 import mongoose = require("mongoose");
 
 export const Ticket = new mongoose.Schema({
+    ticket_id: {
+        type: String,
+        required: true,
+        unique: true
+    },
     title: {
         type: String,
         required: true,
