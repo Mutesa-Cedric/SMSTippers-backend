@@ -84,7 +84,14 @@ export const getCurrentUser = async (req: Request, res: Response) => {
 
 export const logout = async (req: Request, res: Response) => {
     try {
-        res.clearCookie("token");
+
+        res.clearCookie("token", {
+            httpOnly: true,
+            secure: true,
+            sameSite: "none",
+            domain: "smstippers.onrender.com"
+        });
+
         res.status(200).json({ message: "success" });
     } catch (error) {
         console.log(error);
