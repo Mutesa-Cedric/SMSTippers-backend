@@ -16,7 +16,7 @@ export const login = async (req: Request, res: Response) => {
             return res.status(400).json({ message: "Invalid credentials" });
         }
         const token = await generateToken({ id: user._id });
-        res.cookie("token", token, { httpOnly: true, maxAge: 1000 * 60 * 60 * 24 * 7 });
+        res.cookie("token", token, { httpOnly: true, maxAge: 1000 * 60 * 60 * 24 * 7, domain: "smstippers.onrender.com" });
         res.status(200).json({ message: "success", user: user });
     } catch (error) {
         console.log(error);
@@ -39,7 +39,7 @@ export const signup = async (req: Request, res: Response) => {
         const token = await generateToken({
             id: newUser._id,
         });
-        res.cookie("token", token, { httpOnly: true, maxAge: 1000 * 60 * 60 * 24 * 7 });
+        res.cookie("token", token, { httpOnly: true, maxAge: 1000 * 60 * 60 * 24 * 7, domain: "smstippers.onrender.com" });
 
         res.status(201).json({ message: "success", user: newUser });
     } catch (error) {
@@ -51,8 +51,8 @@ export const signup = async (req: Request, res: Response) => {
 
 export const getCurrentUser = async (req: Request, res: Response) => {
     try {
-        console.log(req.cookies);
-        
+        console.log(req.cookies.token);
+
         const token = req.cookies.token;
         if (!token) {
             return res.status(401).json({ message: "Unauthorized" });
