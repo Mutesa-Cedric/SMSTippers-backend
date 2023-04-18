@@ -4,11 +4,16 @@ import { generateTicketId } from "../../utils";
 
 export const getTickets = async (req: Request, res: Response) => {
     try {
-        const tickets = await Ticket.find();
+        const { userId } = req.body;
+        if (!userId) return res.status(400).json({ message: "missing required fields." });
+
+        const tickets = await Ticket.find({ createdBy: userId });
+
         res.status(200).json({
             message: "success",
             tickets: tickets
         });
+        
     } catch (error) {
         console.log(error);
         res.status(500).json({ message: "Internal server error" });

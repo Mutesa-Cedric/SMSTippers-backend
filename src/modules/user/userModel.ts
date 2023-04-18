@@ -44,7 +44,7 @@ const User = new mongoose.Schema({
 User.pre('save', async function (next) {
     const user = this;
     if (user.isModified('password')) {
-        user.password = await hashPassword(user.password);
+        user.password = await hashPassword(user.password!);
     }
     next();
 });
