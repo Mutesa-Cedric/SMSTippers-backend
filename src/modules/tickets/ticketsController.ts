@@ -1,19 +1,26 @@
 import { Request, Response } from "express";
 import Ticket from "./ticketModel";
 import { generateTicketId } from "../../utils";
+import { verifyToken } from "../../utils/jwt";
 
 export const getTickets = async (req: Request, res: Response) => {
     try {
-        const { userId } = req.body;
-        if (!userId) return res.status(400).json({ message: "missing required fields." });
 
-        const tickets = await Ticket.find({ createdBy: userId });
+        const token = req.cookies.token;
+        if (!token) {
+            return res.status(401).json({ message: "Unauthorized" });
+        }
+        const { id } = await verifyToken(token);
+
+        if (!id) return res.status(400).json({ message: "missing required fields." });
+
+        const tickets = await Ticket.find({ createdBy: id });
 
         res.status(200).json({
             message: "success",
             tickets: tickets
         });
-        
+
     } catch (error) {
         console.log(error);
         res.status(500).json({ message: "Internal server error" });
