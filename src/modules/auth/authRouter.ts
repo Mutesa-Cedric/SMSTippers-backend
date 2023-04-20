@@ -2,11 +2,10 @@ import express = require("express");
 import {
     getCurrentUser,
     login,
-    signup,
     logout,
+    signup,
 } from "./authController";
 
-import isAuthenticated from "../../middlewares/auth";
 
 
 const router = express.Router();

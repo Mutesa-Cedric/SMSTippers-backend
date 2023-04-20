@@ -46,8 +46,8 @@ export const getTicket = async (req: Request, res: Response) => {
 
 export const createTicket = async (req: Request, res: Response) => {
     try {
-        const { title, description, status, userId } = req.body;
-        if (!title || !description || !status || !userId) {
+        const { title, description, userId } = req.body;
+        if (!title || !description || !userId) {
             return res.status(400).json({ message: "missing required fields." });
         }
 
@@ -63,10 +63,11 @@ export const createTicket = async (req: Request, res: Response) => {
         const ticket = await Ticket.create({
             title,
             description,
-            status,
+            status: "open",
             ticket_id: ticketId,
             createdBy: userId
         });
+
         res.status(201).json({
             message: "success",
             ticket: ticket
