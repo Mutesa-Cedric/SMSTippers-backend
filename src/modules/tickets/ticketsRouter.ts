@@ -13,7 +13,7 @@ router.get("/all", getTickets);
 router.get("/:id", getTicket);
 router.post("/create", createTicket);
 router.put("/update-status", updateTicketStatus);
-router.delete("/delete", deleteTicket);
+router.delete("/:ticketId", deleteTicket);
 
 
 export default router;

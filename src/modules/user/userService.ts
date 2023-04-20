@@ -77,3 +77,15 @@ export const apiKeyExists = async (apiKey: string): Promise<Boolean> => {
         throw new Error("Internal server error");
     }
 }
+
+export const findUserByPromoCode = async (promoCode: string) => {
+    try {
+        const user = await User.findOne({ promoCode: promoCode });
+
+        return user;
+
+    } catch (error) {
+        console.log(error);
+        throw new Error("Internal server error");
+    }
+}

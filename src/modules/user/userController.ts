@@ -1,6 +1,6 @@
 import { Request, Response } from "express"
 import { verifyToken } from "../../utils/jwt";
-import { apiKeyExists, findUserById, promoCodeExists } from "./userService";
+import { apiKeyExists, findUserById, findUserByPromoCode, promoCodeExists } from "./userService";
 import { comparePassword } from "../../utils/bcrypt";
 import { generateApiKey } from "../../utils";
 
@@ -98,9 +98,9 @@ export const updatePromoCode = async (req: Request, res: Response) => {
                 message: "New Promocode is required"
             })
         }
-        if (newPromoCode.length < 4) {
+        if (newPromoCode.length < 4 || newPromoCode.length > 8) {
             return res.status(400).json({
-                message: "Promocode must be at least 4 characters long"
+                message: "Promocode must be between 4 to 8  characters long"
             })
         }
         const token = req.cookies.token;
@@ -120,6 +120,31 @@ export const updatePromoCode = async (req: Request, res: Response) => {
         user.promoCode = newPromoCode;
         await user.save();
         res.status(200).json({ message: "success", newPromoCode: newPromoCode });
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            message: "Internal server error"
+        })
+    }
+}
+
+export const getUserByPromoCode = async (req: Request, res: Response) => {
+    try {
+        const { promoCode } = req.body;
+        if (!promoCode) {
+            return res.status(400).json({
+                message: "Promocode is required"
+            })
+        }
+
+        const user = await findUserByPromoCode(promoCode);
+        if (!user) {
+            return res.status(404).json({
+                message: "User not found"
+            })
+        }
+        res.status(200).json({ message: "success", user: user });
+
     } catch (error) {
         console.log(error);
         res.status(500).json({

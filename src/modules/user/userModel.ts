@@ -17,7 +17,10 @@ const User = new mongoose.Schema({
     },
     promoCode: {
         type: String,
-        required: [true, 'promoCode is required']
+        required: [true, 'promoCode is required'],
+        unique: true,
+        min: 4,
+        max: 8,
     },
     password: {
         type: String,

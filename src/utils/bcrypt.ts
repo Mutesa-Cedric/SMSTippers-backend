@@ -6,7 +6,7 @@ export const hashPassword = async (password: string): Promise<string> => {
 };
 
 
-export const comparePassword = async (password: string, encryptedPassword: string): Promise<Boolean> => {
+export const comparePassword = async (password: string, encryptedPassword?: string): Promise<Boolean> => {
+    if (!encryptedPassword) return false;
     return await compare(password, encryptedPassword);
 }
-

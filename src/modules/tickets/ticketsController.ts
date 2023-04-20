@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import Ticket from "./ticketModel";
 import { generateTicketId } from "../../utils";
 import { verifyToken } from "../../utils/jwt";
+import { resolveObjectURL } from "buffer";
 
 export const getTickets = async (req: Request, res: Response) => {
     try {
@@ -103,7 +104,8 @@ export const updateTicketStatus = async (req: Request, res: Response) => {
 
 export const deleteTicket = async (req: Request, res: Response) => {
     try {
-        const { ticketId } = req.body;
+        const { ticketId } = req.params;
+        if (!ticketId) return res.status(400).json({ message: "ticket id is required!." });
         const ticket = await Ticket.findById(ticketId);
         if (!ticket) {
             return res.status(404).json({ message: "Ticket not found" });
