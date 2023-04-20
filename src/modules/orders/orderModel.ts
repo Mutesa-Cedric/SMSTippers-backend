@@ -31,6 +31,8 @@ const Order = new mongoose.Schema({
         type: Date,
         default: Date.now
     },
+}, {
+    timestamps: true
 });
 
 export default mongoose.model("order", Order);
