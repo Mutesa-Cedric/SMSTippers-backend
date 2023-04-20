@@ -42,6 +42,9 @@ const User = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User'
     }],
+
+}, {
+    timestamps: true
 });
 // hash password before saving
 User.pre('save', async function (next) {

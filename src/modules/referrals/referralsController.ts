@@ -32,7 +32,7 @@ export const createReferral = async (req: Request, res: Response) => {
 
 export const getReferrals = async (req: Request, res: Response) => {
     try {
-        const { userId } = req.body;
+        const { userId } = req.query;
         if (!userId) return res.status(400).json({ message: "No user id provided!" });
 
         const user = await User.findById(userId).populate("referrals");
