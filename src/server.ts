@@ -38,12 +38,12 @@ app.use((req, res, next) => {
 
 // router middlewares
 app.use("/auth", authRouter);
-app.use("/tickets", isAuthenticated, ticketsRouter);
-app.use("/referrals", isAuthenticated, referralsRouter);
-app.use("/users", isAuthenticated, userRouter);
-app.use("/topup", isAuthenticated, topupRouter);
-app.use("/orders", isAuthenticated, ordersRouter);
-app.use("/rentals", isAuthenticated, rentalsRouter);
+app.use("/tickets", ticketsRouter);
+app.use("/referrals", referralsRouter);
+app.use("/users", userRouter);
+app.use("/topup", topupRouter);
+app.use("/orders", ordersRouter);
+app.use("/rentals", rentalsRouter);
 
 
 app.get("/", (req, res) => {
