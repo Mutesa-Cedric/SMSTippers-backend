@@ -15,7 +15,7 @@ export const getTickets = async (req: Request, res: Response) => {
 
         if (!id) return res.status(400).json({ message: "missing required fields." });
 
-        const tickets = await Ticket.find({ createdBy: id });
+        const tickets = await Ticket.find({ createdBy: id }).sort({ createdAt: -1 }).exec();
 
         res.status(200).json({
             message: "success",
