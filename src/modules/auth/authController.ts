@@ -21,7 +21,10 @@ export const login = async (req: Request, res: Response) => {
             maxAge: 1000 * 60 * 60 * 24 * 7,
             sameSite: "none",
             secure: true,
-            domain: "smstippers.onrender.com"
+            domain: process.env.NODE_ENV === "development" ?
+                "localhost"
+                : "smstippers.onrender.com"
+
         });
         res.status(200).json({ message: "success", user: user });
     } catch (error) {
@@ -50,7 +53,7 @@ export const signup = async (req: Request, res: Response) => {
             maxAge: 1000 * 60 * 60 * 24 * 7,
             sameSite: "none",
             secure: true,
-            domain: "smstippers.onrender.com"
+            domain: process.env.NODE_ENV === "development" ? "localhost" : "smstippers.onrender.com"
         });
 
         res.status(201).json({ message: "success", user: newUser });

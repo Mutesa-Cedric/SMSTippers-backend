@@ -15,7 +15,7 @@ const Order = new mongoose.Schema({
         type: Number,
         required: true
     },
-    service_id: {
+    service: {
         type: String,
         required: true
     },
@@ -27,9 +27,9 @@ const Order = new mongoose.Schema({
         type: Number,
         required: true
     },
-    created_at: {
-        type: Date,
-        default: Date.now
+    price: {
+        type: Number,
+        required: true,
     },
 }, {
     timestamps: true
