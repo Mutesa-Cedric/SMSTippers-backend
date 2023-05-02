@@ -1,15 +1,11 @@
 import mongoose = require("mongoose");
 
-const Refund = new mongoose.Schema({
+const OrderRefund = new mongoose.Schema({
     order: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "order",
-        unique: true
-    },
-    rental: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "rental",
-        unique: true
+        unique: true,
+        required: true
     },
     user: {
         type: mongoose.Schema.Types.ObjectId,
@@ -25,4 +21,4 @@ const Refund = new mongoose.Schema({
         timestamps: true
     })
 
-export default mongoose.model("refund", Refund);
+export default mongoose.model("order-refund", OrderRefund);

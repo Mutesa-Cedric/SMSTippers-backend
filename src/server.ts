@@ -36,7 +36,7 @@ app.use((req, res, next) => {
 });
 
 app.use((req, res, next) => {
-    console.log(req.method, req.url);
+    console.log(req.originalUrl, "\t", req.method, "\t", req.url);
     next();
 });
 
