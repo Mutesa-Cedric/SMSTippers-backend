@@ -1,8 +1,7 @@
-import { findUserById } from './../user/userService';
 import { Request, Response } from 'express';
-import Order from './orderModel';
 import { verifyToken } from '../../utils/jwt';
-import User from '../user/userModel';
+import { findUserById } from './../user/userService';
+import Order from './orderModel';
 
 
 export const createOrder = async (req: Request, res: Response) => {
@@ -62,7 +61,7 @@ export const getOrders = async (req: Request, res: Response) => {
         }
         const orders = await Order.find({
             user: id
-        });
+        }).sort({ createdAt: -1 });
         res.status(200).json({ message: "success", orders: orders });
     } catch (error) {
         console.log(error);

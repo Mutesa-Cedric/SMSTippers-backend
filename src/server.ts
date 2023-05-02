@@ -11,7 +11,7 @@ import userRouter from "./modules/user/userRouter";
 import topupRouter from "./modules/topup/topupRouter";
 import ordersRouter from "./modules/orders/ordersRouter";
 import rentalsRouter from "./modules/rentals/rentalsRouter";
-
+import refundRouter from "./modules/refund/refundRouter";
 const PORT = process.env.PORT || 3000;
 
 const app = express();
@@ -35,6 +35,10 @@ app.use((req, res, next) => {
     next();
 });
 
+app.use((req, res, next) => {
+    console.log(req.method, req.url);
+    next();
+});
 
 // router middlewares
 app.use("/auth", authRouter);
@@ -44,6 +48,7 @@ app.use("/users", userRouter);
 app.use("/topup", topupRouter);
 app.use("/orders", ordersRouter);
 app.use("/rentals", rentalsRouter);
+app.use("/refund", refundRouter);
 
 
 app.get("/", (req, res) => {

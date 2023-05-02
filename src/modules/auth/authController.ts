@@ -67,7 +67,7 @@ export const signup = async (req: Request, res: Response) => {
 
 export const getCurrentUser = async (req: Request, res: Response) => {
     try {
-        console.log(req.cookies.token);
+        // console.log(req.cookies.token);
 
         const token = req.cookies.token;
         if (!token) {
