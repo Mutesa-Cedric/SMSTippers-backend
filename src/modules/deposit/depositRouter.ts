@@ -9,7 +9,7 @@ import { handleWebhook } from "./crypto-webhook-handler";
 const router = express.Router();
 
 router.post("/create", createDeposit);
-router.post("/get-all", getUserDeposits);
+router.get("/get-all", getUserDeposits);
 router.post("/update-status", updateDepositStatus);
 router.post("/get-single", getDepositById);
 

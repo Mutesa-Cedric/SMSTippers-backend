@@ -5,7 +5,7 @@ import { verifyToken } from "../../utils/jwt";
 
 export const createDeposit = async (req: Request, res: Response) => {
     try {
-        const { amount, status, payment_method } = req.body;
+        const { amount, status, payment_method, charge_id } = req.body;
 
         const token = req.cookies.token;
         const { id } = await verifyToken(token);
@@ -55,6 +55,7 @@ export const getUserDeposits = async (req: Request, res: Response) => {
             })
         }
         const deposits = await Deposit.find({ user: id }).sort({ updatedAt: -1 });
+        console.log(deposits)
         res.status(200).json({
             message: "success",
             deposits: deposits
