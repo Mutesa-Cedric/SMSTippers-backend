@@ -29,7 +29,7 @@ app.use(bodyParser.json())
 app.use(cookieParser());
 
 // @ts-ignore
-app.use(rawBody)
+// app.use(rawBody)
 
 app.use((req, res, next) => {
     res.setHeader("Access-Control-Allow-Origin", req.headers.origin ? req.headers.origin : "http://localhost:3000");

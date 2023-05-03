@@ -2,8 +2,11 @@
 import type { Request, Response } from "express"
 import Deposit from "./depositModel";
 import { verifyToken } from "../../utils/jwt";
+import User from "../user/userModel";
+
 
 export const createDeposit = async (req: Request, res: Response) => {
+    console.log("create deposit was called")
     try {
         const { amount, status, payment_method, charge_id } = req.body;
 
@@ -55,7 +58,7 @@ export const getUserDeposits = async (req: Request, res: Response) => {
             })
         }
         const deposits = await Deposit.find({ user: id }).sort({ updatedAt: -1 });
-        console.log(deposits)
+        // console.log(deposits)
         res.status(200).json({
             message: "success",
             deposits: deposits
@@ -70,6 +73,8 @@ export const getUserDeposits = async (req: Request, res: Response) => {
 
 export const updateDepositStatus = async (req: Request, res: Response) => {
     try {
+
+
         const { deposit_id, new_status } = req.body;
         if (!deposit_id) {
             return res.status(400).json({
@@ -82,12 +87,41 @@ export const updateDepositStatus = async (req: Request, res: Response) => {
             })
         }
 
+        const token = req.cookies.token;
+        const { id } = await verifyToken(token);
+        if (!id) {
+            return res.status(403).json({
+                message: "Anauthorized"
+            })
+        }
+
+        const user = await User.findById(id);
+        if (!user) {
+            return res.status(400).json({
+                message: "invalid user"
+            })
+        }
+
         const deposit = await Deposit.findById(deposit_id);
+
+
         if (!deposit) {
             return res.status(400).json({
                 message: "invalid deposit_id"
             })
         }
+
+        if (deposit.status === "successful") {
+            return res.status(400).json({
+                message: "deposit already successful"
+            })
+        }
+
+        if (new_status === "successful") {
+            user.balance += deposit.amount;
+            await user.save();
+        }
+
         deposit.status = new_status;
         await deposit.save();
 
