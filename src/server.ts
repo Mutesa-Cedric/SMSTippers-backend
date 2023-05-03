@@ -2,6 +2,7 @@ require('dotenv').config();
 import express = require("express");
 import bodyParser = require("body-parser");
 import cookieParser = require("cookie-parser");
+import { rawBody } from "./middlewares/rawBody";
 import authRouter from "./modules/auth/authRouter";
 import depositsRouter from "./modules/deposit/depositRouter";
 import ordersRouter from "./modules/orders/ordersRouter";
@@ -26,6 +27,9 @@ dbConnection().then(() => {
 
 app.use(bodyParser.json())
 app.use(cookieParser());
+
+// @ts-ignore
+app.use(rawBody)
 
 app.use((req, res, next) => {
     res.setHeader("Access-Control-Allow-Origin", req.headers.origin ? req.headers.origin : "http://localhost:3000");

@@ -1,10 +1,20 @@
 
 import type { Request, Response } from "express"
 import Deposit from "./depositModel";
+import { verifyToken } from "../../utils/jwt";
 
 export const createDeposit = async (req: Request, res: Response) => {
     try {
-        const { user_id, amount, status, payment_method } = req.body;
+        const { amount, status, payment_method } = req.body;
+
+        const token = req.cookies.token;
+        const { id } = await verifyToken(token);
+        if (!id) {
+            return res.status(403).json({
+                message: "Anauthorized"
+            })
+        }
+        const user_id = id;
         if (!user_id || !amount || !status || !payment_method) {
             return res.status(400).json({
                 message: "some  required parameters are missing",
@@ -37,13 +47,14 @@ export const createDeposit = async (req: Request, res: Response) => {
 
 export const getUserDeposits = async (req: Request, res: Response) => {
     try {
-        const { user_id } = req.body;
-        if (!user_id) {
-            return res.status(400).json({
-                message: "user_id is required"
+        const token = req.cookies.token;
+        const { id } = await verifyToken(token);
+        if (!id) {
+            return res.status(403).json({
+                message: "Anauthorized"
             })
         }
-        const deposits = await Deposit.find({ user: user_id }).sort({ updatedAt: -1 });
+        const deposits = await Deposit.find({ user: id }).sort({ updatedAt: -1 });
         res.status(200).json({
             message: "success",
             deposits: deposits
@@ -64,7 +75,7 @@ export const updateDepositStatus = async (req: Request, res: Response) => {
                 message: "no deposit specified"
             })
         }
-        if (new_status !== "success" || new_status !== "failed" || new_status !== "pending") {
+        if (new_status !== "successful" || new_status !== "failed" || new_status !== "pending") {
             return res.status(400).json({
                 message: "invalid status"
             })

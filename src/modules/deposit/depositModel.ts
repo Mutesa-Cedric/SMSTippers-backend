@@ -12,7 +12,7 @@ const Deposit = new mongoose.Schema({
     },
     status: {
         type: String,
-        enum: ["pending", "success", "failed"],
+        enum: ["pending", "successful", "failed"],
         default: "pending",
         required: true
     },
@@ -20,7 +20,7 @@ const Deposit = new mongoose.Schema({
         type: String,
         enum: ["stripe", "cryptocurrency"],
         required: true,
-    }
+    }   
 }, {
     timestamps: true
 })
