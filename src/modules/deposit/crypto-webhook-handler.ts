@@ -2,29 +2,33 @@ import { Webhook } from "coinbase-commerce-node";
 import type { Request, Response } from "express";
 
 
-interface IRequest extends Request {
+interface IReq extends Request {
     rawBody: string;
 }
 
-export const handleWebhook = (request: IRequest, response: Response) => {
+export const handleWebhook = async (req: IReq, res: Response) => {
     let event;
 
-    console.log(request.headers);
+    console.log(req.headers);
 
     try {
         event = Webhook.verifyEventBody(
-            request.rawBody,
+            req.rawBody,
             // @ts-ignore
-            request.headers['x-cc-webhook-signature'],
-            process.env.COINBASE_WEBHOOK_SECRET
+            req.headers['x-cc-webhook-signature'],
+            process.env.COINBASE_WEBHOOK_SECRET!
         );
+
+        console.log(event);
+
     } catch (error: any) {
         console.log('Error occured', error.message);
 
-        return response.status(400).send('Webhook Error:' + error.message);
+        return res.status(400).send('Webhook Error:' + error.message);
     }
 
     console.log('Success', event.id);
 
-    response.status(200).send('Signed Webhook Received: ' + event.id);
+
+    res.status(200).send('Signed Webhook Received: ' + event.id);
 };
