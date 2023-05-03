@@ -10,7 +10,7 @@ const router = express.Router();
 
 router.post("/create", createDeposit);
 router.get("/get-all", getUserDeposits);
-router.post("/update-status", updateDepositStatus);
+router.put("/update/:depositId", updateDepositStatus);
 router.post("/get-single", getDepositById);
 
 // @ts-ignore

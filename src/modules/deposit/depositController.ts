@@ -73,15 +73,17 @@ export const getUserDeposits = async (req: Request, res: Response) => {
 
 export const updateDepositStatus = async (req: Request, res: Response) => {
     try {
+        const { depositId } = req.params;
+        const { new_status } = req.body;
+        // console.log(new_status);
 
-
-        const { deposit_id, new_status } = req.body;
-        if (!deposit_id) {
+        if (!depositId) {
             return res.status(400).json({
                 message: "no deposit specified"
             })
         }
-        if (new_status !== "successful" || new_status !== "failed" || new_status !== "pending") {
+
+        if (!["successful", "failed", "pending"].includes(new_status)) {
             return res.status(400).json({
                 message: "invalid status"
             })
@@ -102,7 +104,7 @@ export const updateDepositStatus = async (req: Request, res: Response) => {
             })
         }
 
-        const deposit = await Deposit.findById(deposit_id);
+        const deposit = await Deposit.findById(depositId);
 
 
         if (!deposit) {
