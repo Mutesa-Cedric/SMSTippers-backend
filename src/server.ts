@@ -2,16 +2,16 @@ require('dotenv').config();
 import express = require("express");
 import bodyParser = require("body-parser");
 import cookieParser = require("cookie-parser");
-import { dbConnection } from "./utils/dbConnection";
-import isAuthenticated from "./middlewares/auth";
 import authRouter from "./modules/auth/authRouter";
-import ticketsRouter from "./modules/tickets/ticketsRouter";
-import referralsRouter from "./modules/referrals/referralsRouter";
-import userRouter from "./modules/user/userRouter";
-import topupRouter from "./modules/topup/topupRouter";
+import depositsRouter from "./modules/deposit/depositRouter";
 import ordersRouter from "./modules/orders/ordersRouter";
-import rentalsRouter from "./modules/rentals/rentalsRouter";
+import referralsRouter from "./modules/referrals/referralsRouter";
 import refundRouter from "./modules/refund/refundRouter";
+import rentalsRouter from "./modules/rentals/rentalsRouter";
+import ticketsRouter from "./modules/tickets/ticketsRouter";
+import topupRouter from "./modules/topup/topupRouter";
+import userRouter from "./modules/user/userRouter";
+import { dbConnection } from "./utils/dbConnection";
 const PORT = process.env.PORT || 3000;
 
 const app = express();
@@ -49,9 +49,8 @@ app.use("/topup", topupRouter);
 app.use("/orders", ordersRouter);
 app.use("/rentals", rentalsRouter);
 app.use("/refund", refundRouter);
-
+app.use("/deposits", depositsRouter);
 
 app.get("/", (req, res) => {
     res.send("hello smstippers");
 });
-
