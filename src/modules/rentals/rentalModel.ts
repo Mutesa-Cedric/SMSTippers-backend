@@ -15,18 +15,25 @@ const Rental = new mongoose.Schema({
         type: Number,
         required: true
     },
-    service_id: {
+    service: {
         type: String
     },
     days: {
         type: Number,
         required: true,
-        enum: [7, 14, 30,]
     },
     expiry: {
+        type: String,
+        required: true
+    },
+    price: {
         type: Number,
         required: true
     },
+    country: {
+        type: String,
+        require: true
+    }
 }, {
     timestamps: true
 });
