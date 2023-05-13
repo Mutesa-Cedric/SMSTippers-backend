@@ -60,21 +60,21 @@ export const getReferrals = async (req: Request, res: Response) => {
         const registeredToday = user.referrals.filter((referral: any) => {
             return referral.createdAt >= Date.now() - 24 * 60 * 60 * 1000;
         });
-        const registeredLastWeek = user.referrals.filter((referral: any) => {
-            return referral.createdAt >= Date.now() - 7 * 24 * 60 * 60 * 1000;
-        });
-        const registeredLastMonth = user.referrals.filter((referral: any) => {
-            return referral.createdAt >= Date.now() - 30 * 24 * 60 * 60 * 1000;
-        });
+        // const registeredLastWeek = user.referrals.filter((referral: any) => {
+        //     return referral.createdAt >= Date.now() - 7 * 24 * 60 * 60 * 1000;
+        // });
+        // const registeredLastMonth = user.referrals.filter((referral: any) => {
+        //     return referral.createdAt >= Date.now() - 30 * 24 * 60 * 60 * 1000;
+        // });
+        const earnings = await EarnedFromReferrals.find({ earnedBy: userId });
 
 
         res.status(200).json({
             message: "success",
             registeredTodayCount: registeredToday.length,
-            registeredLastWeekCount: registeredLastWeek.length,
-            registeredLastMonthCount: registeredLastMonth.length,
             total: user.referrals.length,
-            referrals: user.referrals
+            referrals: user.referrals,
+            totalEarnings: earnings.map((earning: any) => earning.amount).reduce((a: any, b: any) => a + b, 0)
         });
     } catch (error) {
         console.log(error);
