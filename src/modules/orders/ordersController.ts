@@ -7,7 +7,6 @@ import Order from './orderModel';
 export const createOrder = async (req: Request, res: Response) => {
     try {
         const { order_id, user_id, phoneNumber, country, expires_in, service, price } = req.body;
-        console.log(req.body);
         if (!order_id || !user_id || !phoneNumber || !country || !expires_in || !service || !price) {
             return res.status(400).json({
                 message: "All fields are required!",
@@ -50,6 +49,13 @@ export const createOrder = async (req: Request, res: Response) => {
 
 export const getOrders = async (req: Request, res: Response) => {
     try {
+        const { user_id } = req.query;
+        if (user_id) {
+            const orders = await Order.find({
+                user: user_id
+            }).sort({ createdAt: -1 });
+            return res.status(200).json({ message: "success", orders: orders });
+        }
         const token = req.cookies.token;
         if (!token) {
             return res.status(401).json({ message: "Unauthorized" });

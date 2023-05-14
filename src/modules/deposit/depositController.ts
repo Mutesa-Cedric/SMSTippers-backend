@@ -1,28 +1,40 @@
 
-import type { Request, Response } from "express"
-import Deposit from "./depositModel";
+import type { Request, Response } from "express";
 import { verifyToken } from "../../utils/jwt";
 import User from "../user/userModel";
+import Deposit from "./depositModel";
 
 
 export const createDeposit = async (req: Request, res: Response) => {
-    console.log("create deposit was called")
     try {
-        const { amount, status, payment_method, charge_id } = req.body;
+        const { amount, status, payment_method, charge_id, user_id } = req.body;
+        let userId: string;
 
-        const token = req.cookies.token;
-        const { id } = await verifyToken(token);
-        if (!id) {
-            return res.status(403).json({
-                message: "Anauthorized"
-            })
+        if (user_id) {
+            const user = await User.findById(user_id);
+            if (!user) {
+                return res.status(400).json({
+                    message: "Invalid user id"
+                })
+            }
+            userId = user_id;
+
+        } else {
+            const token = req.cookies.token;
+            const { id } = await verifyToken(token);
+            if (!id) {
+                return res.status(403).json({
+                    message: "Anauthorized"
+                })
+            }
+            userId = id;
         }
-        const user_id = id;
-        if (!user_id || !amount || !status || !payment_method) {
+
+        if (!userId || !amount || !status || !payment_method) {
             return res.status(400).json({
                 message: "some  required parameters are missing",
                 missing_fields: {
-                    user_id: user_id ? "present" : "missing",
+                    userId: user_id ? "present" : "missing",
                     amount: amount ? "present" : "missing",
                     status: status ? "present" : "missing",
                     payment_method: payment_method ? "present" : "missing",
@@ -30,7 +42,7 @@ export const createDeposit = async (req: Request, res: Response) => {
             })
         }
         const deposit = await Deposit.create({
-            user: user_id,
+            user: userId,
             amount,
             status,
             payment_method
@@ -50,6 +62,13 @@ export const createDeposit = async (req: Request, res: Response) => {
 
 export const getUserDeposits = async (req: Request, res: Response) => {
     try {
+        const { user_id } = req.query;
+        if (user_id) {
+            const deposits = await Deposit.find({
+                user: user_id
+            }).sort({ createdAt: -1 });
+            return res.status(200).json({ message: "success", deposits: deposits });
+        }
         const token = req.cookies.token;
         const { id } = await verifyToken(token);
         if (!id) {

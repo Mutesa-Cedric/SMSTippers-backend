@@ -6,29 +6,15 @@ import User from '../user/userModel';
 
 export const createRental = async (req: Request, res: Response) => {
     try {
-        const { rental_id, phoneNumber, service_id, days, expiry, price, country } = req.body;
+        const { rental_id, phoneNumber, service_id, days, expiry, price, country, user_id } = req.body;
 
         const token = req.cookies.token;
-        if (!token) {
-            return res.status(403).json({
-                message: "Anauthorized"
-            })
-        }
-        const { id } = verifyToken(token);
-        const user = await User.findById(id);
-        if (!user) {
-            return res.status(403).json({
-                message: "Anauthorized"
-            })
-        }
-
-        user.balance -= price;
-        await user.save();
 
         if (!rental_id || !phoneNumber || !days || !expiry || !price || !country) {
             return res.status(400).json({
                 message: "All fields are required!",
                 missing_fields: {
+                    user_id: !user_id && !token ? "missing" : "not missing",
                     rental_id: !rental_id ? "missing" : "not missing",
                     phoneNumber: !phoneNumber ? "Missing" : "not missing",
                     days: !days ? "missing" : "not missing",
@@ -38,6 +24,32 @@ export const createRental = async (req: Request, res: Response) => {
                 }
             });
         }
+
+
+        if (!token && !user_id) {
+            return res.status(403).json({
+                message: "Anauthorized"
+            })
+        }
+
+        let user: any;
+
+        if (user_id) {
+            user = await User.findById(user_id);
+        } else {
+            const { id } = await verifyToken(token);
+            user = await findUserById(id);
+        }
+
+        if (!user) {
+            return res.status(403).json({
+                message: "Anauthorized"
+            })
+        }
+
+        user.balance -= price;
+        await user.save();
+
 
         const rental = await Rental.create({
             rental_id,
@@ -60,6 +72,13 @@ export const createRental = async (req: Request, res: Response) => {
 }
 export const getRentals = async (req: Request, res: Response) => {
     try {
+        const { user_id } = req.query;
+        if (user_id) {
+            const rentals = await Rental.find({
+                user: user_id
+            }).sort({ createdAt: -1 });
+            return res.status(200).json({ message: "success", rentals: rentals });
+        }
         const token = req.cookies.token;
         if (!token) {
             return res.status(401).json({ message: "Unauthorized" });
