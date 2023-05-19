@@ -20,7 +20,11 @@ const Deposit = new mongoose.Schema({
         type: String,
         enum: ["stripe", "cryptocurrency"],
         required: true,
-    }   
+    },
+    payment_url: {
+        type: String,
+        required: false
+    }
 }, {
     timestamps: true
 })

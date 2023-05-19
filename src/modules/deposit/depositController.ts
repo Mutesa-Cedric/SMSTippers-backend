@@ -77,7 +77,24 @@ export const getUserDeposits = async (req: Request, res: Response) => {
             })
         }
         const deposits = await Deposit.find({ user: id }).sort({ updatedAt: -1 });
-        // console.log(deposits)
+        // check for deposits with status pending and have more than 6 hours and update their status to failed
+        const pendingDeposits = deposits.filter(deposit => deposit.status === "pending");
+
+        const failedDeposits = pendingDeposits.filter(deposit => {
+            const depositDate = new Date(deposit.createdAt);
+            const currentDate = new Date();
+            const diff = currentDate.getTime() - depositDate.getTime();
+            const hours = diff / (1000 * 60 * 60);
+            return hours >= 6;
+        });
+
+        if (failedDeposits.length > 0) {
+            failedDeposits.forEach(async deposit => {
+                deposit.status = "failed";
+                await deposit.save();
+            })
+        }
+
         res.status(200).json({
             message: "success",
             deposits: deposits
@@ -172,6 +189,41 @@ export const getDepositById = async (req: Request, res: Response) => {
                 message: "Invalid deposit id"
             })
         }
+        res.status(200).json({
+            message: "success",
+            deposit: deposit
+        })
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            message: "Internal Server Error"
+        })
+    }
+}
+
+export const updatePaymentUrl = async (req: Request, res: Response) => {
+    try {
+        const { deposit_id, payment_url } = req.body;
+        if (!deposit_id || !payment_url) {
+            return res.status(400).json({
+                message: "deposit_id and payment_url are required",
+                missing_fields: {
+                    deposit_id: deposit_id ? "present" : "missing",
+                    payment_url: payment_url ? "present" : "missing"
+                }
+            })
+        }
+
+        const deposit = await Deposit.findById(deposit_id);
+        if (!deposit) {
+            return res.status(400).json({
+                message: "Invalid deposit id"
+            })
+        };
+
+        deposit.payment_url = payment_url;
+        await deposit.save();
+
         res.status(200).json({
             message: "success",
             deposit: deposit

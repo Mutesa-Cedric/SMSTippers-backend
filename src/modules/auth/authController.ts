@@ -21,7 +21,7 @@ export const login = async (req: Request, res: Response) => {
             maxAge: 1000 * 60 * 60 * 24 * 7,
             sameSite: "none",
             secure: true,
-            domain: process.env.NODE_ENV === "development" ?
+            domain: process.env.HOST === "localhost" ?
                 "localhost"
                 : "smstippers.onrender.com"
 
