@@ -13,7 +13,7 @@ import ticketsRouter from "./modules/tickets/ticketsRouter";
 import topupRouter from "./modules/topup/topupRouter";
 import userRouter from "./modules/user/userRouter";
 import { dbConnection } from "./utils/dbConnection";
-const PORT = process.env.PORT || 3000;
+const PORT = 8000;
 
 const app = express();
 dbConnection().then(() => {
@@ -32,7 +32,7 @@ app.use(cookieParser());
 // app.use(rawBody)
 
 app.use((req, res, next) => {
-    res.setHeader("Access-Control-Allow-Origin", req.headers.origin ? req.headers.origin : "https://smstippers.com");
+    res.setHeader("Access-Control-Allow-Origin",process.env.ENVIRONMENT==='development'?'http://localhost:3000':'https://smstippers.com');
     res.setHeader("Access-Control-Allow-Credentials", "true");
     res.setHeader("Access-Control-Allow-Methods", "GET,HEAD,OPTIONS,POST,PUT,DELETE");
     res.setHeader("Access-Control-Allow-Headers", "Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers, Authorization");

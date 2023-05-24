@@ -6,16 +6,23 @@ import { resolveObjectURL } from "buffer";
 
 export const getTickets = async (req: Request, res: Response) => {
     try {
+        const {user_id}=req.query;
+        let userId:string;
+        if(user_id){
+            userId=user_id as string;
+        }else{
+            const token = req.cookies.token;
+            if (!token) {
+                return res.status(401).json({ message: "Unauthorized" });
+            }
+            const { id } = await verifyToken(token);
 
-        const token = req.cookies.token;
-        if (!token) {
-            return res.status(401).json({ message: "Unauthorized" });
+            if (!id) return res.status(400).json({ message: "missing required fields." });
+            userId=id;
+            
         }
-        const { id } = await verifyToken(token);
 
-        if (!id) return res.status(400).json({ message: "missing required fields." });
-
-        const tickets = await Ticket.find({ createdBy: id }).sort({ createdAt: -1 }).exec();
+        const tickets = await Ticket.find({ createdBy: userId }).sort({ createdAt: -1 }).exec();
 
         res.status(200).json({
             message: "success",

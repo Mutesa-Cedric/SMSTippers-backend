@@ -20,7 +20,6 @@ export const getStats = async (req: Request, res: Response) => {
         if (user_id) {
             userId = user_id as string;
         } else {
-
             const token = req.cookies.token;
 
             if (!token) {
@@ -29,7 +28,6 @@ export const getStats = async (req: Request, res: Response) => {
             const { id } = await verifyToken(token);
             userId = id;
         }
-
 
         const orders = await Order.find({ user: userId });
         const rentals = await Rental.find({ user: userId });

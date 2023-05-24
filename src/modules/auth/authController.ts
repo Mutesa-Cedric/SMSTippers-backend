@@ -68,13 +68,16 @@ export const signup = async (req: Request, res: Response) => {
 
 export const getCurrentUser = async (req: Request, res: Response) => {
     try {
-        // console.log(req.cookies.token);
-
-        const token = req.cookies.token;
-        if (!token) {
-            return res.status(401).json({ message: "Unauthorized" });
+        // const token = req.cookies.token;
+        // if (!token) {
+        //     return res.status(401).json({ message: "Unauthorized" });
+        // }
+        // const { id } = await verifyToken(token);
+        const {id}=req.query;
+        if(!id  && typeof id==="string"){
+            return res.status(401).json({ message: "Unauthorized" })
         }
-        const { id } = await verifyToken(token);
+        // @ts-ignore
         const user = await findUserById(id);
         if (!user) {
             return res.status(401).json({ message: "Unauthorized" });
@@ -88,7 +91,6 @@ export const getCurrentUser = async (req: Request, res: Response) => {
 
 export const logout = async (req: Request, res: Response) => {
     try {
-
         res.clearCookie("token", {
             httpOnly: true,
             secure: true,
