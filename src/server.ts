@@ -2,7 +2,6 @@ require('dotenv').config();
 import express = require("express");
 import bodyParser = require("body-parser");
 import cookieParser = require("cookie-parser");
-import { rawBody } from "./middlewares/rawBody";
 import authRouter from "./modules/auth/authRouter";
 import depositsRouter from "./modules/deposit/depositRouter";
 import ordersRouter from "./modules/orders/ordersRouter";
@@ -13,7 +12,7 @@ import ticketsRouter from "./modules/tickets/ticketsRouter";
 import topupRouter from "./modules/topup/topupRouter";
 import userRouter from "./modules/user/userRouter";
 import { dbConnection } from "./utils/dbConnection";
-const PORT = 8000;
+const PORT = process.env.PORT||8000;
 
 const app = express();
 dbConnection().then(() => {

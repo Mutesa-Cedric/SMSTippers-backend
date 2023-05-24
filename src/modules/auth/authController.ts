@@ -15,18 +15,18 @@ export const login = async (req: Request, res: Response) => {
         if (!isMatch) {
             return res.status(400).json({ message: "Invalid credentials" });
         }
-        const token = await generateToken({ id: user._id });
+        // const token = await generateToken({ id: user._id });
         
-        res.cookie("token", token, {
-            httpOnly: true,
-            maxAge: 1000 * 60 * 60 * 24 * 7,
-            sameSite: "none",
-            secure: true,
-            domain: process.env.HOST === "localhost" ?
-                "localhost"
-                : "smstippers.onrender.com"
+        // res.cookie("token", token, {
+        //     httpOnly: true,
+        //     maxAge: 1000 * 60 * 60 * 24 * 7,
+        //     sameSite: "none",
+        //     secure: true,
+        //     domain: process.env.HOST === "localhost" ?
+        //         "localhost"
+        //         : "smstippers.onrender.com"
 
-        });
+        // });
         res.status(200).json({ message: "success", user: user });
     } catch (error) {
         console.log(error);
@@ -46,16 +46,16 @@ export const signup = async (req: Request, res: Response) => {
         }
         const newUser = await createUser(name, email, password);
 
-        const token = await generateToken({
-            id: newUser._id,
-        });
-        res.cookie("token", token, {
-            httpOnly: true,
-            maxAge: 1000 * 60 * 60 * 24 * 7,
-            sameSite: "none",
-            secure: true,
-            domain: process.env.HOST === "development" ? "localhost" : "smstippers.onrender.com"
-        });
+        // const token = await generateToken({
+        //     id: newUser._id,
+        // });
+        // res.cookie("token", token, {
+        //     httpOnly: true,
+        //     maxAge: 1000 * 60 * 60 * 24 * 7,
+        //     sameSite: "none",
+        //     secure: true,
+        //     domain: process.env.HOST === "development" ? "localhost" : "smstippers.onrender.com"
+        // });
 
         res.status(201).json({ message: "success", user: newUser });
     } catch (error) {
